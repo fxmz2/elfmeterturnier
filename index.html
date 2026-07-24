@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elfmeterschießen</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
+    margin:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+}
+
+.teams{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+select{
+    width:100%;
+    padding:10px;
+    font-size:18px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    text-align:center;
+}
+
+th,td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+button{
+    width:40px;
+    height:40px;
+    font-size:18px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin:2px;
+}
+
+.goal{
+    background:#4CAF50;
+    color:white;
+}
+
+.miss{
+    background:#F44336;
+    color:white;
+}
+
+.selected{
+    outline:3px solid #000;
+}
+
+.results{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-top:30px;
+    text-align:center;
+}
+
+.reset{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    background:orange;
+    color:white;
+    font-size:18px;
+}
+
+@media(max-width:700px){
+
+table{
+    font-size:14px;
+}
+
+button{
+    width:34px;
+    height:34px;
+}
+
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="teams">
+
+<div>
+<h2>Team A</h2>
+<select id="teamA">
+<option>Tribbel Ballerinas</option>
+<option>Rechberger Suffraketen</option>
+<option>Woizehoizer</option>
+<option>FC Jebote</option>
+<option>1. FC Bober K.</option>
+<option>1. FC Bober K. 2</option>
+<option>Bamboleo Bombenleger</option>
+<option>Die Ikonen des TSGV</option>
+<option>FC Biercelona</option>
+<option>FC Schorlebomber</option>
+<option>Snunshampton</option>
+<option>Die unbezwingbaren Wuddles</option>
+<option>Roccos schwere Jungs</option>
+<option>Lode 1</option>
+<option>Lode 2</option>
+<option>Lode 3</option>
+<option>1. FC Suffstetten</option>
+<option>Team Spirit</option>
+<option>1. SV BARFUß BETHLEHEM</option>
+<option>Hoch die Beine Hoch der Pegel</option>
+<option>Jets</option>
+<option>1885 Hey</option>
+<option>Hans-an-die-Bar-Street</option>
+<option>Pizza Da Noi</option>
+<option>Team 25</option>
+<option>Team 26</option>
+<option>Team 27</option>
+<option>Team 28</option>
+<option>Team 29</option>
+<option>Team 30</option>
+<option>Team 31</option>
+<option>Team 32</option>
+
+</select>
+</div>
+
+<div>
+<h2>Team B</h2>
+<select id="teamB">
+<option>Tribbel Ballerinas</option>
+<option>Rechberger Suffraketen</option>
+<option>Woizehoizer</option>
+<option>FC Jebote</option>
+<option>1. FC Bober K.</option>
+<option>1. FC Bober K. 2</option>
+<option>Bamboleo Bombenleger</option>
+<option>Die Ikonen des TSGV</option>
+<option>FC Biercelona</option>
+<option>FC Schorlebomber</option>
+<option>Snunshampton</option>
+<option>Die unbezwingbaren Wuddles</option>
+<option>Roccos schwere Jungs</option>
+<option>Lode 1</option>
+<option>Lode 2</option>
+<option>Lode 3</option>
+<option>1. FC Suffstetten</option>
+<option>Team Spirit</option>
+<option>1. SV BARFUß BETHLEHEM</option>
+<option>Hoch die Beine Hoch der Pegel</option>
+<option>Jets</option>
+<option>1885 Hey</option>
+<option>Hans-an-die-Bar-Street</option>
+<option>Pizza Da Noi</option>
+<option>Team 25</option>
+<option>Team 26</option>
+<option>Team 27</option>
+<option>Team 28</option>
+<option>Team 29</option>
+<option>Team 30</option>
+<option>Team 31</option>
+<option>Team 32</option>
+
+</select>
+</div>
+
+</div>
+
+<table>
+
+<tr>
+<th>Schütze</th>
+<th>Team A</th>
+<th>Team B</th>
+</tr>
+
+<tbody id="rows"></tbody>
+
+</table>
+
+<div class="results">
+
+<div>
+
+<h2 id="nameA">Team A</h2>
+
+<div id="iconsA">- - - - -</div>
+
+<h3 id="scoreA">0 / 5</h3>
+
+</div>
+
+<div>
+
+<h2 id="nameB">Team B</h2>
+
+<div id="iconsB">- - - - -</div>
+
+<h3 id="scoreB">0 / 5</h3>
+
+</div>
+
+</div>
+
+<button class="reset" onclick="resetGame()">
+Reset
+</button>
+
+</div>
+
+<script>
+
+let a=[null,null,null,null,null];
+let b=[null,null,null,null,null];
+
+const tbody=document.getElementById("rows");
+
+for(let i=0;i<5;i++){
+
+tbody.innerHTML+=`
+<tr>
+
+<td>${i+1}</td>
+
+<td>
+
+<button class="goal"
+onclick="setShot('a',${i},true,this)">⚽</button>
+
+<button class="miss"
+onclick="setShot('a',${i},false,this)">❌</button>
+
+</td>
+
+<td>
+
+<button class="goal"
+onclick="setShot('b',${i},true,this)">⚽</button>
+
+<button class="miss"
+onclick="setShot('b',${i},false,this)">❌</button>
+
+</td>
+
+</tr>
+`;
+
+}
+
+function setShot(team,index,goal,btn){
+
+let arr=team=="a"?a:b;
+
+arr[index]=goal;
+
+let cell=btn.parentElement;
+
+cell.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
+
+btn.classList.add("selected");
+
+update();
+
+}
+
+function update(){
+
+updateSide(a,"A");
+updateSide(b,"B");
+
+document.getElementById("nameA").innerHTML=document.getElementById("teamA").value;
+document.getElementById("nameB").innerHTML=document.getElementById("teamB").value;
+
+}
+
+function updateSide(arr,id){
+
+let goals=0;
+
+let text=[];
+
+arr.forEach(v=>{
+
+if(v===true){
+
+goals++;
+text.push("⚽");
+
+}else if(v===false){
+
+text.push("❌");
+
+}else{
+
+text.push("➖");
+
+}
+
+});
+
+document.getElementById("icons"+id).innerHTML=text.join(" ");
+
+document.getElementById("score"+id).innerHTML=goals+" / 5";
+
+}
+
+function resetGame(){
+
+a=[null,null,null,null,null];
+b=[null,null,null,null,null];
+
+document.querySelectorAll("button").forEach(btn=>{
+
+btn.classList.remove("selected");
+
+});
+
+update();
+
+}
+
+document.getElementById("teamA").onchange=update;
+document.getElementById("teamB").onchange=update;
+
+update();
+
+</script>
+
+</body>
+</html>
